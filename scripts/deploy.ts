@@ -3,10 +3,16 @@ import { AirdropToken, Airdrop } from "../typechain-types";
 
 async function main() {
     // Get name and symbol from command line arguments
-    const [name, symbol] = process.argv.slice(2);
+    const args = process.argv.slice(2);
+    
+    // Find the index of '--' separator
+    const separatorIndex = args.indexOf('--');
+    const scriptArgs = separatorIndex !== -1 ? args.slice(separatorIndex + 1) : args;
+    
+    const [name, symbol] = scriptArgs;
 
     if (!name || !symbol) {
-        throw new Error("Please provide token name and symbol as arguments");
+        throw new Error("Please provide token name and symbol as arguments. Example: npx hardhat run --network lisk_sepolia scripts/deploy.ts -- \"Hola Airdrop\" \"HOAI\"");
     }
 
     console.log(`Deploying token with name: ${name} and symbol: ${symbol}`);
@@ -14,6 +20,10 @@ async function main() {
     // Get deployer
     const [deployer] = await ethers.getSigners();
     console.log("Deploying contracts with account:", deployer.address);
+
+    // Check deployer balance
+    const balance = await ethers.provider.getBalance(deployer.address);
+    console.log("Deployer balance:", ethers.formatEther(balance), "ETH");
 
     // Deploy Token
     const Token = await ethers.getContractFactory("AirdropToken");

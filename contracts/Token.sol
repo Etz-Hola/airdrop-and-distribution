@@ -5,7 +5,10 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract AirdropToken is ERC20, Ownable {
-    constructor() ERC20("HOLA Airdrop", "HAT") Ownable(msg.sender) {
-        _mint(msg.sender, 1000000 * 10**18); // 1 million tokens
+    constructor(string memory name, string memory symbol) 
+        ERC20(name, symbol) 
+        Ownable(msg.sender) 
+    {
+        _mint(msg.sender, 100000000 * 10**18); // 1 million tokens
     }
 }
